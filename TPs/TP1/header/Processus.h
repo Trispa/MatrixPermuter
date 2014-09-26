@@ -8,64 +8,65 @@
 #ifndef PROCESSUS_H_
 #define PROCESSUS_H_
 #include<string>
-using  namespace std;
+using namespace std;
 namespace tp1 {
 
 class Processus {
 //!----------Partie publique accessible par les objets-------------*/
 public:
 	//!
-	//! constructeurpar defaut
+	//!\brief constructeurpar defaut
 
 	Processus();
 	//!
-	//! constructeur avec parametres
+	//!\brief constructeur avec parametres
 
-	Processus(string  p_pid, int  p_duree, int  p_priorite);
+	Processus(string p_pid, int p_duree, int p_priorite);
 
 	//!
-	//! destructeur;
+	//!\brief destructeur;
 
 	virtual ~Processus();
-
-
 
 	//!----------seters modificateurs----------------------*/
 
 	//!
-	//! modifcateur du membre temps d'Attente
+	//!\brief modifcateur du membre temps d'Attente
 
 	void setProcessId(const string &);
 	//!
-	//! modifcateur du membre buree
+	//!\brief modifcateur du membre buree
 
 	void setDuree(const int &);
 	//!
-	//! modifcateur du membre Priorité
+	//!\brief modifcateur du membre Priorité
 
 	void setPriorite(const int &);
 
+	//!
+	//!\brief modificateur du membre Etat
 
+	void setEtat(const string &);
 
 	//!----------getters ou accesseurs----------------------*/
 
 	//!
-	//! Accesseur du membre Pid
+	//!\brief Accesseur du membre Pid
 
 	string getPid() const;
 
 	//!
-	//! Accesseur du membre duree
+	//!\brief Accesseur du membre duree
 	//!
 	int getDuree() const;
 
 	//!
-	//! Accesseur du membre temos de consommé
+	//!\brief Accesseur du membre temos de consommé
 
 	int getTempsConsomme() const;
 
 	//!
-	//! Accesseur du membre  temps d'attente
+	//!\brief Accesseur du membre  temps d'attente
 
 	int getTempsAttente() const;
 
@@ -74,6 +75,30 @@ public:
 
 	int getPriorite() const;
 
+	//!
+	//!\brief Accesseur du membre etat
+
+	string getEtat() const;
+
+	//!brief fonction permettant d'elir une precuss
+	//! ie: mettre a jour l'etat d' un processus une fois elu
+
+	void elir();
+
+	//!brief fonction permettant d'elir une precuss
+	//! ie: mettre a jour l'etat d' un processus une fois elu
+
+	void admettre();
+
+	//!brief fonction permettant d'elir une precuss
+	//! ie: mettre a jour l'etat d' un processus une fois elu
+
+	void interrompre();
+
+	//!brief fonction permettant d'elir une precuss
+	//! ie: mettre a jour l'etat d' un processus une fois elu
+
+	void terminer();
 //!----------Partie privée non accessible par les objets-------------*/
 
 private:
@@ -82,6 +107,27 @@ private:
 	int m_tempsConsomme; //temps consommé jusqu’à maintenant
 	int m_attente; // temps d’attente cumulé
 	int m_priorite; // priorité du processus
+	std::string m_etat; // l'etat du processus
+
+	//!
+	//!\brief _estElu permet de dire si le  processus est elu ou pas
+
+	bool _estPret (const string & ) const;
+
+	//!
+	//!\brief _estAdmis permet de dire si le  processus est elu ou pas
+
+	bool _estEnAttente( const string & )const;
+
+	//!
+	//!\brief _estInterrompu permet de dire si le  processus est elu ou pas
+
+	bool _estEnExecution( const string & )const;
+
+	//!
+	//!\brief _esttermine permet de dire si le  processus est elu ou pas
+
+	bool _estTermine( const string & )const;
 };
 
 } /* namespace tp1 */
