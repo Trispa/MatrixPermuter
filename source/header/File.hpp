@@ -10,8 +10,8 @@
 
 #ifndef _FILE_HPP
 #define _FILE_HPP
+#include "File.h"
 
-#include <stdexcept>
 using  namespace std;
 
 namespace  tp1

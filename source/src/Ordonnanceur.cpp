@@ -7,15 +7,15 @@
 
 #include "Ordonnanceur.h"
 
-namespace tp1_ordonanceur {
+namespace tp1 {
 
 Ordonnanceur::Ordonnanceur() {
 	// TODO Auto-generated constructor stub
 
 }
 
-Ordonnanceur::~Ordonnanceur() {
-	// TODO Auto-generated destructor stub
-}
+//Ordonnanceur::~Ordonnanceur() {
+//	// TODO Auto-generated destructor stub
+//}
 
 } /* namespace tp1_ordonanceur */
