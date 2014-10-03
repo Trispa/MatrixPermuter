@@ -10,8 +10,13 @@
  *
  */
 
+#include"Processus.h"
+#include "Ordonnanceur.h"
+#include"File.h"
+using namespace tp1;
 int main (void)
 {
+
 
 }
 

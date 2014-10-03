@@ -6,35 +6,62 @@
  */
 
 #include "Processus.h"
-#include<string>
+#include <algorithm>
+#include <iostream>
+#include <stdexcept>
+#include <string>
 
 namespace tp1 {
 //!\brief constructeur par defaut
 //!\exception std::bad_alloc
 Processus::Processus() :
-		m_pid(NULL), m_duree(0), m_tempsConsomme(0), m_attente(0), m_priorite(
+		m_pid(""), m_duree(0), m_tempsConsomme(0), m_attente(0), m_priorite(
 				0), m_etat("nouveau")
 
 {
 }
-;
+
 //!\brief constructeur par defaut
 //!\param[in]p_pid
 //!\param[in]p_duree
-//!\param[in]p_priorite
+//!\param[in]p_prioritel
 //!\pre les paramtre d'entré doivent etre renseignés
 //!\post un objet de pocessus est crée
 //!\exception std::bad_alloc
-Processus::Processus(string p_pid, int p_duree, int p_priorite) :
+Processus::Processus(string  p_pid, int p_duree, int p_priorite) :
 		m_pid(p_pid), m_duree(p_duree), m_tempsConsomme(0), m_attente(0), m_priorite(
-				p_priorite) {
-}
-;
+				p_priorite), m_etat("nouveau"){}
+
 //!\brief destructeur du processus
 //!\post les resource alloués aux processus sont desallouées et le processus existe plus ne memoir
 Processus::~Processus() {
-	// TODO Auto-generated destructor stub
+	this->setDuree(0);
+	this->setPriorite(0);
+	this->setProcessId("");
 }
+
+//!
+//! \brief Surcharger l'opérateur =
+//!
+//! \pre Il y a assez de mémoire pour l'opération
+//! \post Une copie du Processus est retournée
+//! \exception bad_alloc si la mémoire est insuffisante
+//!
+const Processus& Processus::operator = (const Processus& p_processus) //throw (std::bad_alloc)
+{
+	if(this->m_pid != "") // si le processus a deja un Pid
+	{
+		this->~Processus();
+	}
+	this->m_attente = p_processus.m_attente;
+	this->m_duree = p_processus.m_duree;
+	this->m_etat = p_processus.m_etat;
+	this->m_pid = p_processus.m_pid;
+	this->m_priorite = p_processus.m_priorite;
+
+	return (*this);
+}
+
 
 //!----------seters modificateurs----------------------*/
 

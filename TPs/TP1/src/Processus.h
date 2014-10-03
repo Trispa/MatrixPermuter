@@ -17,16 +17,26 @@ public:
 	//!
 	//!\brief constructeurpar defaut
 
-	Processus();
+	explicit Processus();
 	//!
 	//!\brief constructeur avec parametres
 
-	Processus(string p_pid, int p_duree, int p_priorite);
+	explicit Processus(string p_pid, int p_duree, int p_priorite);
 
 	//!
 	//!\brief destructeur;
 
-	virtual ~Processus();
+	~Processus();
+
+	//!
+	//! \brief Surcharger l'opérateur =
+	//!
+	//! \pre Il y a assez de mémoire pour l'opération
+	//! \post Une copie du Processus est retournée
+	//! \exception bad_alloc si la mémoire est insuffisante
+	//!
+	const Processus& operator = (const Processus&) ;//throw (std::bad_alloc);
+
 
 	//!----------seters modificateurs----------------------*/
 
@@ -34,7 +44,8 @@ public:
 	//!\brief modifcateur du membre temps d'Attente
 
 	void setProcessId(const string &);
-	//!
+
+		//!
 	//!\brief modifcateur du membre buree
 
 	void setDuree(const int &);

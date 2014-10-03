@@ -108,6 +108,7 @@ namespace tp1
 	//!
 		const T& dernier() const ;//throw (std::logic_error);
 
+
 	// surcharges d'opérateurs
 
 	//!
@@ -170,7 +171,7 @@ namespace tp1
 		int cpt;		//!< Nombre d'éléments effectifs dans la file//!/
 
 	//!
-	//!  \brief Détruire une file
+	//! \brief Détruire une file
 	//!
 	//! Méthode privée
 	//!

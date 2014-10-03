@@ -11,11 +11,14 @@
 #include <stdexcept>
 #include "File.h"
 #include "Processus.h"
+#include <list>
+using namespace std;
 namespace tp1 {
 
 class Ordonnanceur {
 public:
 	Ordonnanceur();
+	~Ordonnanceur();
 	//!
 	//!  \brief Constructeur de copie
 	//!  \pre Il faut qu'il y ait suffisamment de mémoire
@@ -23,9 +26,20 @@ public:
 	//!
 	Ordonnanceur(const File<Processus> &); //throw(std::bad_alloc);
 
-	void executeTache () const;
+	//!
+	//!\brief Accesseur du membre tache de l'ordonnanceur
+	//!\return p_pid
+
+	File<Processus>  getTache() const;
+
+	void  executeTache () const;
 
 private:
+	File<Processus> m_tache;// la tache de l'ordonanceur
+
+	//!brief cette fonction permet de recupere sans doublons les priorité
+	//!et  les triant par ordre croissant
+	list<int> listeDesPriorites () ;
 
 };
 

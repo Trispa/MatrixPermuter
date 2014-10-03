@@ -42,23 +42,22 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.lib.debug.60551592.164142195" name="/" resourcePath="src">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.lib.debug.531261143" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.lib.debug" unusedChildren="">
-							<targetPlatform id="cdt.managedbuild.target.gnu.platform.lib.debug" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.lib.debug"/>
-							<tool id="cdt.managedbuild.tool.gnu.archiver.lib.debug.1851001202" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.lib.debug.1549249425"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.1212500832" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.466157901">
-								<option id="gnu.cpp.compiler.option.include.paths.1274131030" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+					<folderInfo id="cdt.managedbuild.config.gnu.lib.debug.60551592.1503349753" name="/" resourcePath="src">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.lib.debug.260360217" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.lib.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.archiver.lib.debug.561702603" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.lib.debug.1549249425"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.1745482317" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.466157901">
+								<option id="gnu.cpp.compiler.option.include.paths.395981364" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/header}&quot;"/>
 								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1105676735" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1830437347" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.lib.debug.1356444581" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.lib.debug.1003567257">
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1703440804" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.lib.debug.1454055565" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.lib.debug.1003567257">
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1107243754" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1670669919" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base.177407982"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1730490703" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.909369696"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.lib.debug.1620374017" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.lib.debug.620349416">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.2135076982" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.206553167" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base.177407982"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.606591820" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.909369696"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.lib.debug.518222569" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.lib.debug.620349416">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.163937306" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
