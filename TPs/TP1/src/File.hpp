@@ -2,7 +2,7 @@
 //! \brief Le code des op�rateurs de la file.
 //! \author Patrice Diouf
 //! \version 0.1
-//! \date semptembre 2013
+//! \date semptembre 2014
 //! Impl�mentation de la classe g�n�rique File dans une liste cha�n�e
 //!
 //!

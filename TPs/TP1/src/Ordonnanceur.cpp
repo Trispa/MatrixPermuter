@@ -20,7 +20,7 @@ namespace tp1 {
 Ordonnanceur::Ordonnanceur(const File<Processus> & p_tache) :
 		m_tache(p_tache) {
 }
-;
+
 
 Ordonnanceur::~Ordonnanceur() {
 
@@ -37,20 +37,27 @@ File<Processus>  Ordonnanceur::getTache() const{
 	return this->m_tache;
 }
 
+//!brief Accesseur de la liste des priorité
+list<int> Ordonnanceur::getlisteDePriorite()const{
+	return this->listeDesPriorites;
+}
+
+
 //!brief cette fonction permet de recupere sans doublons les priorité
 //!et  les triant par ordre croissant
 //!return liste de priorités
-list<int> Ordonnanceur::listeDesPriorites()  {
-	Processus temp  = m_tache[0];
+list<int> Ordonnanceur::listerLesPriorites()  {
+
 	std::list<int> listPritorite;
-	std::set<int> elements;
+
 	for(int i= 1; i<m_tache.taille(); i++)
 	{
 		listPritorite.push_back(m_tache[i].getPriorite());
 	}
 	listPritorite.sort();
-		//TODO g pas encore geré les doublons
-	return listPritorite;
+	listPritorite.unique();
+	this->listeDesPriorites = listPritorite;
+	return this->listeDesPriorites;
 }
 
 } /* namespace tp1_ordonanceur */

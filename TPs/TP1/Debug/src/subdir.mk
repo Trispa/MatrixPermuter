@@ -6,30 +6,30 @@
 CPP_SRCS += \
 ../src/ContratException.cpp \
 ../src/Ordonnanceur.cpp \
+../src/OrdonnanceurTest.cpp \
 ../src/Processus.cpp \
-../src/ProcessusTest.cpp \
-../src/fileTesteur.cpp 
+../src/ProcessusTest.cpp 
 
 OBJS += \
 ./src/ContratException.o \
 ./src/Ordonnanceur.o \
+./src/OrdonnanceurTest.o \
 ./src/Processus.o \
-./src/ProcessusTest.o \
-./src/fileTesteur.o 
+./src/ProcessusTest.o 
 
 CPP_DEPS += \
 ./src/ContratException.d \
 ./src/Ordonnanceur.d \
+./src/OrdonnanceurTest.d \
 ./src/Processus.d \
-./src/ProcessusTest.d \
-./src/fileTesteur.d 
+./src/ProcessusTest.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I../TP1/header -I../TP1/TP1/header -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

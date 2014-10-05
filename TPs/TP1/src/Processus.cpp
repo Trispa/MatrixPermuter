@@ -35,9 +35,11 @@ Processus::Processus(string  p_pid, int p_duree, int p_priorite) :
 //!\brief destructeur du processus
 //!\post les resource alloués aux processus sont desallouées et le processus existe plus ne memoir
 Processus::~Processus() {
+
 	this->setDuree(0);
 	this->setPriorite(0);
 	this->setProcessId("");
+	delete this;
 }
 
 //!

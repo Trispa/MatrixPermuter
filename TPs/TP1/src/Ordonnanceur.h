@@ -28,18 +28,24 @@ public:
 
 	//!
 	//!\brief Accesseur du membre tache de l'ordonnanceur
-	//!\return p_pid
-
 	File<Processus>  getTache() const;
 
+	//!
+	//!\brief function permettant dexecuter une tâche
+	//!\return p_pid
 	void  executeTache () const;
+	//!
+	//!\brief Accesseur de la liste des priorité des pocessus
+	list<int> getlisteDePriorite() const;
 
+	//!brief cette fonction permet de recupere sans doublons les priorité
+	list<int> listerLesPriorites() ;
 private:
 	File<Processus> m_tache;// la tache de l'ordonanceur
 
 	//!brief cette fonction permet de recupere sans doublons les priorité
 	//!et  les triant par ordre croissant
-	list<int> listeDesPriorites () ;
+	list<int> listeDesPriorites;
 
 };
 
