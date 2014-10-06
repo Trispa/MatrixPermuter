@@ -7,6 +7,7 @@
 
 #ifndef ORDONNANCEUR_H_
 #define ORDONNANCEUR_H_
+#define QUANTUM 4
 #include <iostream>
 #include <stdexcept>
 #include "File.h"
@@ -17,8 +18,7 @@ namespace tp1 {
 
 class Ordonnanceur {
 public:
-	Ordonnanceur();
-	~Ordonnanceur();
+
 	//!
 	//!  \brief Constructeur de copie
 	//!  \pre Il faut qu'il y ait suffisamment de mémoire
@@ -26,18 +26,23 @@ public:
 	//!
 	Ordonnanceur(const File<Processus> &); //throw(std::bad_alloc);
 
+	//!destructeur
+	~Ordonnanceur();
 	//!
 	//!\brief Accesseur du membre tache de l'ordonnanceur
 	File<Processus>  getTache() const;
 
 	//!
 	//!\brief function permettant dexecuter une tâche
-	//!\return p_pid
 	void  executeTache () const;
 	//!
 	//!\brief Accesseur de la liste des priorité des pocessus
 	list<int> getlisteDePriorite() const;
 
+	//!\brief afficher les infos de la tache
+	void afficherTache()const;
+	//!\brief afficher le resultat de lasimulation
+	void afficherResultats()const;
 	//!brief cette fonction permet de recupere sans doublons les priorité
 	list<int> listerLesPriorites() ;
 private:

@@ -17,8 +17,8 @@
 #include"Processus.h"
 #include "Ordonnanceur.h"
 #include"File.h"
-
-
+#include<list>
+using namespace std;
 using namespace tp1;
 
 int main(void) {
@@ -40,19 +40,28 @@ int main(void) {
 //	}
 //
 	// tester les fonction de l'ordonnanceur
-	Processus p1;
-	Processus p2;
-	Processus p3 ;
-	Processus p4 ;
-	Processus p5 ;
-	File <Processus> p_tache;
-	p_tache.enfiler(p1);
-	p_tache.enfiler(p2);
-	p_tache.enfiler( p3);
-	p_tache.enfiler(p4);
-	p_tache.enfiler(p5);
+	Processus *p1 = new Processus("p3", 1, 2);
+	Processus *p2 = new Processus("p3", 1, 2);
+	Processus *p3 = new Processus("p3", 1, 3);
+	Processus *p4 = new Processus("p4", 2, 6);
+	Processus *p5 = new Processus("p5", 2, 6);
+	File<Processus> p_tache;
+	p_tache.enfiler(*p1);
+	p_tache.enfiler(*p2);
+	p_tache.enfiler(*p3);
+	p_tache.enfiler(*p4);
+	p_tache.enfiler(*p5);
 
 	Ordonnanceur* unOrdonnanceur = new Ordonnanceur(p_tache);
-
+//	unOrdonnanceur->afficherTache();
+//	unOrdonnanceur->afficherResultats();
+	unOrdonnanceur->listerLesPriorites();
+	list<int> vecteurdePriorite = unOrdonnanceur->getlisteDePriorite();
+	cout<<"la longueur est = "<<vecteurdePriorite.size()<<endl;
+	for(list<int>::iterator it = vecteurdePriorite.begin();it != vecteurdePriorite.end(); ++it)
+	{
+		std::cout<<*it;
+	}
+	cout<<endl;
 }
 

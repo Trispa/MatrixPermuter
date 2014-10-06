@@ -6,23 +6,17 @@
 CPP_SRCS += \
 ../src/ContratException.cpp \
 ../src/Ordonnanceur.cpp \
-../src/OrdonnanceurTest.cpp \
-../src/Processus.cpp \
-../src/ProcessusTest.cpp 
+../src/Processus.cpp 
 
 OBJS += \
 ./src/ContratException.o \
 ./src/Ordonnanceur.o \
-./src/OrdonnanceurTest.o \
-./src/Processus.o \
-./src/ProcessusTest.o 
+./src/Processus.o 
 
 CPP_DEPS += \
 ./src/ContratException.d \
 ./src/Ordonnanceur.d \
-./src/OrdonnanceurTest.d \
-./src/Processus.d \
-./src/ProcessusTest.d 
+./src/Processus.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

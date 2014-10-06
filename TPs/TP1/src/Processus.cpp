@@ -35,11 +35,7 @@ Processus::Processus(string  p_pid, int p_duree, int p_priorite) :
 //!\brief destructeur du processus
 //!\post les resource alloués aux processus sont desallouées et le processus existe plus ne memoir
 Processus::~Processus() {
-
-	this->setDuree(0);
-	this->setPriorite(0);
-	this->setProcessId("");
-	delete this;
+// rien n'est alloué dynamiquement
 }
 
 //!
@@ -83,7 +79,7 @@ void Processus::setProcessId(const string & p_pid) {
 //!\pre p_duree doit etre une valeur entiere
 //!\post la durée du processu est renseignées
 
-void Processus::setDuree(const int & p_duree) {
+void Processus::setDuree( const int & p_duree) {
 	this->m_duree = p_duree;
 }
 //!
@@ -175,6 +171,7 @@ bool Processus::_estEnExecution(const string &) const {
 //!\param[in] p_pid
 //!\return vrai si le processus est terminé faux sinon
 bool Processus::_estTermine(const string &) const {
+
 	return ((this->m_etat != "termine") ? false : true);
 }
 
@@ -205,6 +202,7 @@ void Processus::interrompre()
 //! ie: mettre a jour l'etat d' un processus une fois elu
 
 void Processus::terminer(){
+
 	this->setEtat("termine");
 }
 

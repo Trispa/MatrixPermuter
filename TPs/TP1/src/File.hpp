@@ -93,6 +93,49 @@ T File<T>::defiler() {
 }
 
 //!
+//! \brief Enlever un élément à une certaine position
+//! La position commence à partir de 1
+//!
+//! \pre la position doit être comprise entre 1 et |L|+1
+//! \post La liste comprend un élément de moins
+//! \post La liste est inchangée sinon
+//! \exception range_error si l'élément est absent
+//!/
+template <typename T>
+void File<T>::enleverPos(int p_pos)
+{
+	elem trouve;
+
+	//V�rification des hypoth�ses (pr�conditions)
+	//La position, �a couvre �galement le cas o� la liste est vide (taille = 0).
+	if(p_pos<1 || p_pos > taille()) throw range_error("EnleverPos:Position pour l'enlevement est erron�e");
+
+	// cas ou' pos = 1
+	if(p_pos == 1)
+	{
+		trouve = tete;
+		tete = tete->suivant;
+	}
+	else
+	{
+		int cpt(1);
+		elem courant = tete;	//on se positionne au d�but de la liste cha�n�e
+		while (cpt< p_pos - 1)	//boucle pour positionner courant sur la structre d'avant celui � enlever
+		{
+			courant=courant->suivant;	//on passe � la structure suivante..
+			cpt++;						//...et on compte
+		}
+		trouve = courant->suivant;
+		courant->suivant = trouve->suivant;
+	}
+
+	// on "coupe" la structure  supprim�e de la liste
+	trouve->suivant = 0;
+	//lib�ration de la m�moire associ�e � la structure  supprim�e
+	delete trouve;
+}
+
+//!
 //! \fn int File<T>::taille() const
 //! \breif pour connaitre la taille de la File actuelle
 //! \return La taille de la file
