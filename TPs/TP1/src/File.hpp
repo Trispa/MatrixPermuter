@@ -48,7 +48,10 @@ template<typename T>
 File<T>::~File() {
 	_detruire();
 }
-
+template<typename T>
+void File<T>::asgTaille(int & p_cpt){
+	cpt = p_cpt;
+}
 //!
 //! \fn void File<T>::enfiler(const T& p_elementAEnfiler)throw (bad_alloc)
 //! \brief ajouter une objet de type T dans la File
@@ -100,39 +103,51 @@ T File<T>::defiler() {
 //! \post La liste comprend un élément de moins
 //! \post La liste est inchangée sinon
 //! \exception range_error si l'élément est absent
-//!/
-template <typename T>
-void File<T>::enleverPos(int p_pos)
-{
+//! \exception  logic_erro si la liste est vide
+template<typename T>
+void File<T>::enleverPos(int p_pos) {
 	elem trouve;
 
+	if(this->estVide())
+	{
+		throw logic_error("EnleverPos: le file est  vide");
+	}
 	//V�rification des hypoth�ses (pr�conditions)
 	//La position, �a couvre �galement le cas o� la liste est vide (taille = 0).
-	if(p_pos<1 || p_pos > taille()) throw range_error("EnleverPos:Position pour l'enlevement est erron�e");
+	if (p_pos < 0 || p_pos > taille()-1)
+		throw range_error("EnleverPos:Position pour l'enlevement est erron�e");
 
 	// cas ou' pos = 1
-	if(p_pos == 1)
-	{
-		trouve = tete;
+	if (p_pos == 0) {
+
+		trouve = this->tete;
 		tete = tete->suivant;
-	}
-	else
-	{
-		int cpt(1);
-		elem courant = tete;	//on se positionne au d�but de la liste cha�n�e
-		while (cpt< p_pos - 1)	//boucle pour positionner courant sur la structre d'avant celui � enlever
+	} else {
+
+		int cpt(0);
+		elem courant = this->tete;//on se positionne au d�but de la liste cha�n�e
+		while (cpt < p_pos - 1)	//boucle pour positionner courant sur la structre d'avant celui � enlever
 		{
-			courant=courant->suivant;	//on passe � la structure suivante..
+			courant = courant->suivant;	//on passe � la structure suivante..
 			cpt++;						//...et on compte
 		}
+
 		trouve = courant->suivant;
-		courant->suivant = trouve->suivant;
+		if (trouve == queue) {
+
+			queue = courant;
+			queue->suivant = 0;
+		} else {
+			courant->suivant = trouve->suivant;
+		}
 	}
 
 	// on "coupe" la structure  supprim�e de la liste
 	trouve->suivant = 0;
 	//lib�ration de la m�moire associ�e � la structure  supprim�e
 	delete trouve;
+	int nouvelleTaille = this->cpt - 1;
+	asgTaille(nouvelleTaille);
 }
 
 //!
@@ -154,6 +169,7 @@ template<typename T>
 bool File<T>::estVide() const {
 	return cpt == 0;
 }
+
 
 //!
 //! \fn const T& File<T>:: premier()const throw (logic_error)
@@ -185,7 +201,7 @@ const T& File<T>::dernier() const {
 //! \return T - Element recherche
 //! \exception throw  throw (std::out_of_range)
 template<typename T>
-const T& File<T>::operator[](int indice) const
+T& File<T>::operator[](int indice) const
 // retourne un �l�ment de la file
 		{
 	elem temp = tete;

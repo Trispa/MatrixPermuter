@@ -38,58 +38,67 @@ public:
 	const Processus& operator = (const Processus&) ;//throw (std::bad_alloc);
 
 
-	//!----------seters modificateurs----------------------*/
+	//!----------modificatieur----------------------*/
 
 	//!
 	//!\brief modifcateur du membre temps d'Attente
 
-	void setProcessId(const string &);
+	void asgProcessId(const string &);
 
 		//!
 	//!\brief modifcateur du membre buree
 
-	void setDuree(const int &);
+	void asgDuree(const int &);
 	//!
 	//!\brief modifcateur du membre Priorité
 
-	void setPriorite(const int &);
+	void asgPriorite(const int &);
 
 	//!
 	//!\brief modificateur du membre Etat
 
-	void setEtat(const string &);
+	void asgEtat(const string &);
+	//!
+	//!\brief modificateur du membre temps consomme
+
+		void asgTempsConsomme(const int &);
+
+	//!
+	//!\brief modificateur du membre temps d'Attente
+
+	void asgAttente(const int &);
 
 	//!----------getters ou accesseurs----------------------*/
 
 	//!
 	//!\brief Accesseur du membre Pid
 
-	string getPid() const;
+	string reqPid() const;
 
 	//!
 	//!\brief Accesseur du membre duree
 	//!
-	int getDuree() const;
+	int reqDuree() const;
 
 	//!
 	//!\brief Accesseur du membre temos de consommé
 
-	int getTempsConsomme() const;
+	int reqTempsConsomme() const;
 
 	//!
 	//!\brief Accesseur du membre  temps d'attente
 
-	int getTempsAttente() const;
+	int reqAttente() const;
 
 	//!
 	//! Accesseur du membre priorité
 
-	int getPriorite() const;
+	int reqPriorite() const;
 
 	//!
 	//!\brief Accesseur du membre etat
 
-	string getEtat() const;
+	string reqEtat() const;
 
 	//!brief fonction permettant d'elir une precuss
 	//! ie: mettre a jour l'etat d' un processus une fois elu
@@ -110,6 +119,16 @@ public:
 	//! ie: mettre a jour l'etat d' un processus une fois elu
 
 	void terminer();
+
+	//!
+	//!\brief _esttermine permet de dire si le  processus est elu ou pas
+
+	bool estTermine()const;
+	//!
+	//!\brief _estInterrompu permet de dire si le  processus est elu ou pas
+
+	bool estEnExecution();
+
 //!----------Partie privée non accessible par les objets-------------*/
 
 private:
@@ -123,22 +142,14 @@ private:
 	//!
 	//!\brief _estElu permet de dire si le  processus est elu ou pas
 
-	bool _estPret (const string & ) const;
+	bool _estPret () const;
 
 	//!
 	//!\brief _estAdmis permet de dire si le  processus est elu ou pas
 
-	bool _estEnAttente( const string & )const;
+	bool _estEnAttente()const;
 
-	//!
-	//!\brief _estInterrompu permet de dire si le  processus est elu ou pas
 
-	bool _estEnExecution( const string & )const;
-
-	//!
-	//!\brief _esttermine permet de dire si le  processus est elu ou pas
-
-	bool _estTermine( const string & )const;
 };
 
 } /* namespace tp1 */

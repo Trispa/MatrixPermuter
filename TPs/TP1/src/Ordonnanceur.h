@@ -24,29 +24,31 @@ public:
 	//!  \pre Il faut qu'il y ait suffisamment de mémoire
 	//!  \exception bad_alloc s'il n'y a pas assez de mémoire
 	//!
-	Ordonnanceur(const File<Processus> &); //throw(std::bad_alloc);
+	Ordonnanceur(File<Processus> &); //throw(std::bad_alloc);
 
 	//!destructeur
 	~Ordonnanceur();
 	//!
 	//!\brief Accesseur du membre tache de l'ordonnanceur
-	File<Processus>  getTache() const;
+	File<Processus>  reqTache() const;
 
+	//!brief MEttre a jour le temps d'Attente des processus
+	void mettreAjourTempsAttente(int tps);
 	//!
 	//!\brief function permettant dexecuter une tâche
-	void  executeTache () const;
+	void  executeTache (int &, int &) ;
 	//!
 	//!\brief Accesseur de la liste des priorité des pocessus
-	list<int> getlisteDePriorite() const;
+	list<int> reqlisteDePriorite() ;
 
 	//!\brief afficher les infos de la tache
 	void afficherTache()const;
 	//!\brief afficher le resultat de lasimulation
-	void afficherResultats()const;
+	void afficherResultats(int &tempsAttenteMoyen , int &tempsRequis)const;
 	//!brief cette fonction permet de recupere sans doublons les priorité
-	list<int> listerLesPriorites() ;
+	void listerLesPriorites() ;
 private:
-	File<Processus> m_tache;// la tache de l'ordonanceur
+	File<Processus> & m_tache;// la tache de l'ordonanceur
 
 	//!brief cette fonction permet de recupere sans doublons les priorité
 	//!et  les triant par ordre croissant

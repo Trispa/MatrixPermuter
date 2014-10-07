@@ -47,7 +47,9 @@ public:
 	//!
 	~File();
 
-	//	modificateurs
+	//	modificateur
+	//brief modificateur de de la taille de la fille
+	void asgTaille(int & p_cpt);
 
 	//!
 	//!  \brief Enfiler un nouvel élément dans la file
@@ -118,7 +120,7 @@ public:
 	//! \post L'élément é la position voulue est retournée
 	//! \exception out_of_range si l'indice n'est pas correcte
 	//!
-	const T& operator [](int) const;	//throw (std::out_of_range);
+	T& operator [](int) const;	//throw (std::out_of_range);
 
 	//!
 	//! \brief Surcharger l'opérateur =

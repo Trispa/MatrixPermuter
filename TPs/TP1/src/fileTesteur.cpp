@@ -66,6 +66,17 @@ TEST_F(maFileTesteur, PremierElement)
 		ASSERT_EQ(maFile.premier(), 1);
 
 }
+TEST_F(maFileTesteur, enlverPosition)
+{
+	File <int> maFile;
+				maFile.enfiler(1);
+				maFile.enfiler(8);
+				maFile.enfiler(3);
+				maFile.enfiler(10);
+				maFile.enleverPos(3);
+				cout <<" le dernier element de la file est maintenent  : "<<maFile.dernier()<<endl;
+			ASSERT_EQ(maFile.taille(), 3);
+}
 
 
 
