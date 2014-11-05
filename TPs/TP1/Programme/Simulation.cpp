@@ -25,6 +25,8 @@ int main(void) {
 //TODO il reste a faire de sorte qu'on est un ordonnanceur pour chaque tache separé pas /*
 	std::ifstream myfile("taches.txt");
 	File<Processus> p_tache;
+	list<Processus> resultat;
+	list<int> listePriorite;
 	std::string line;
 	cout << line << endl;
 	std::getline(myfile, line); //recupere le premier caractere de du fichier qui est "/*"
@@ -33,7 +35,6 @@ int main(void) {
 		{
 			std::getline(myfile, line);
 
-
 			std::istringstream iss(line);
 			string pid;
 			int duree, priorite;
@@ -41,16 +42,17 @@ int main(void) {
 				Processus *p = new Processus(pid, duree, priorite);
 				p_tache.enfiler(*p);
 
-
 			} else {
-				Ordonnanceur* unOrdonnanceur = new Ordonnanceur(p_tache);
+				Ordonnanceur* unOrdonnanceur = new Ordonnanceur(p_tache,resultat,listePriorite);
 				unOrdonnanceur->listerLesPriorites();
-				cout<<"la taille de file est :" <<p_tache.taille()<<endl;
 				unOrdonnanceur->afficherTache();
-				int tp1;
-				int tp2;
-				unOrdonnanceur->executeTache(tp1, tp2);
-				unOrdonnanceur->afficherResultats(tp1, tp2);
+
+
+
+				unOrdonnanceur->executeTache();
+
+				unOrdonnanceur->afficherResultats();
+				p_tache.~File();
 
 			}
 

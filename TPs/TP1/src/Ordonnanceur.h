@@ -13,6 +13,7 @@
 #include "File.h"
 #include "Processus.h"
 #include <list>
+
 using namespace std;
 namespace tp1 {
 
@@ -24,19 +25,23 @@ public:
 	//!  \pre Il faut qu'il y ait suffisamment de mémoire
 	//!  \exception bad_alloc s'il n'y a pas assez de mémoire
 	//!
-	Ordonnanceur(File<Processus> &); //throw(std::bad_alloc);
+	Ordonnanceur(File<Processus> &, list<Processus>&, list<int>&); //throw(std::bad_alloc);
 
 	//!destructeur
 	~Ordonnanceur();
 	//!
 	//!\brief Accesseur du membre tache de l'ordonnanceur
 	File<Processus>  reqTache() const;
-
+	//!brief une fonction permettant de retourner une fille de Processus de meme priorité
+	const File<Processus> &  filePriorite(int  );
 	//!brief MEttre a jour le temps d'Attente des processus
-	void mettreAjourTempsAttente(int tps);
+	void mettreAjourTempsAttente(File<Processus> & p_f,int tps);
+
+	//!brief fonction pour mettre a jour l'etat des procus
+	void initEtatProcessusTache();
 	//!
 	//!\brief function permettant dexecuter une tâche
-	void  executeTache (int &, int &) ;
+	void executeTache () ;
 	//!
 	//!\brief Accesseur de la liste des priorité des pocessus
 	list<int> reqlisteDePriorite() ;
@@ -44,15 +49,17 @@ public:
 	//!\brief afficher les infos de la tache
 	void afficherTache()const;
 	//!\brief afficher le resultat de lasimulation
-	void afficherResultats(int &tempsAttenteMoyen , int &tempsRequis)const;
+	void afficherResultats();
 	//!brief cette fonction permet de recupere sans doublons les priorité
 	void listerLesPriorites() ;
+	//!\brief fonction pour retourner resultat
+	list<Processus> reqResultat()const;
 private:
 	File<Processus> & m_tache;// la tache de l'ordonanceur
+	list<Processus> &resultat;
 
-	//!brief cette fonction permet de recupere sans doublons les priorité
-	//!et  les triant par ordre croissant
-	list<int> listeDesPriorites;
+	list<int> &listeDesPriorites;
+
 
 };
 
