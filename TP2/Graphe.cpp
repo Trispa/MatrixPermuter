@@ -707,29 +707,33 @@ void Graphe::initGraphe(std::vector<int>& p_temp,
 int Graphe::dijkstra(const int& p_Origine, const int& p_Destination,
 		std::vector<int> & p_chemin) {
 	{
-		std::vector<int> T;
-		std::vector<int> P;
-		std::vector<int> Y;
 
-		int minval ; // min = numero de coup minimal et j  = sa position
-		int j = p_Origine;
+		std::vector<int> S;// les sommets solutionnés
+		std::vector<int> T;// fils d'Attente suivant le cout
+		std::vector<int> P;//tableau des sommet precedents
+		std::vector<int> Y;// tabelau des cout
+
 		initGraphe(T, P, Y,p_Origine);
+		int minval ; // min = numero de coup minimal
+		int j ;//  sa position du coup minimal
+		int trouve  = 0;
 
 
 		try {
 
 
 
-			while(j!= p_Destination) {
+			while(!T.empty() && trouve ==0) {
 
 				minval =  min(Y)[0];
 				j = min(Y)[1];
 				T[j] = minval;
-				P[j] =T[j] ;
+				S.push_back(T[j]);
+				if(!this->listerSommetsAdjacents(j).empty())
+				for (std::vector<int>::iterator k = this->listerSommetsAdjacents(j).begin(); k!= this->listerSommetsAdjacents(j).end(); k++ ){
 
-				for (std::vector<int>::iterator k = listerSommetsAdjacents(j).begin(); k!= listerSommetsAdjacents(j).end(); k++ ){
-
-					this->relacher(j, *k, getCoutArc(j,*k), p_chemin);
+					cout<<*k<<endl;
+					//relacher(j, *(k), this->getCoutArc(j,*(k)), p_chemin);
 
 
 				}

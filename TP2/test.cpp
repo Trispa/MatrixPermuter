@@ -75,7 +75,7 @@ TEST_F(GrapheTesteur , testPreparationGraphe)
    ASSERT_EQ(g->min(tableauCout)[0], 0);
    ASSERT_EQ(g->min(tableauCout)[1], 0);
 
-   //int coutPracour = g->dijkstra(source, destination, chemin);
+   int coutPracour = g->dijkstra(source, destination, chemin);
 
    //cout<< coutPracour<<endl;
 
