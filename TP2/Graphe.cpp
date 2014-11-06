@@ -6,7 +6,11 @@
  */
 
 #include "Graphe.h"
-
+#include <stdexcept>
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <algorithm>
 using namespace std;
 
 // --------------------------------------------------------------------------------------------
@@ -498,32 +502,32 @@ std::vector<int> Graphe::listerSommetsAdjacents(int numero) const {
 
 	std::vector<int> sommets;
 
-	// -- Ã©tape 1 : Marquer tous les sommets comme n'ayant pas Ã©tÃ© placÃ©s dans le tableau ---------------------------
+	// -- étape 1 : Marquer tous les sommets comme n'ayant pas été placés dans le tableau ---------------------------
 
 	for (Sommet * sommetActuel = this->listSommets; sommetActuel != 0;
 			sommetActuel = sommetActuel->suivant)
 		sommetActuel->etat = false;
 
-	// -- Ã©tape 2 : Marquer le sommet en question comme "ne pas ajouter" --------------------------------------------
+	// -- étape 2 : Marquer le sommet en question comme "ne pas ajouter" --------------------------------------------
 
 	sommet->etat = true;
 
-	// -- Ã©tape 3 : Arcs sortants -----------------------------------------------------------------------------------
+	// -- étape 3 : Arcs sortants -----------------------------------------------------------------------------------
 
 	for (Arc * arcActuel = sommet->listeDest; arcActuel != 0; arcActuel =
 			arcActuel->suivDest) {
-		if (!(arcActuel->dest->etat)) // VÃ©rifier que le sommet n'est pas marquÃ© comme "ne pas ajouter"
+		if (!(arcActuel->dest->etat)) // Vérifier que le sommet n'est pas marqué comme "ne pas ajouter"
 		{
 			arcActuel->dest->etat = true; // Marquer le sommet comme "ne pas ajouter"
 			sommets.push_back(arcActuel->dest->numero); // l'inclure dans sommets
 		}
 	}
 
-	// -- â€¦tape 4 : Arcs entrants -----------------------------------------------------------------------------------
+	// -- …tape 4 : Arcs entrants -----------------------------------------------------------------------------------
 
 	for (Sommet * sommetActuel = this->listSommets; sommetActuel != 0;
 			sommetActuel = sommetActuel->suivant) {
-		// Si le sommet actuel n'est pas marquÃ© comme "ne pas ajouter"
+		// Si le sommet actuel n'est pas marqué comme "ne pas ajouter"
 		// ET qu'il y a un arc du sommet actuel vers le sommet en question...
 		if (sommetActuel->etat == false && _getArc(sommetActuel, sommet) != 0)
 			sommets.push_back(sommetActuel->numero); // l'inclure dans sommets
@@ -639,11 +643,10 @@ ostream& operator <<(ostream& out, const Graphe& g) {
 //!\brief relacher des arc pour mettre a jour le veceur des coups
 
 //TODO a tester
-void Graphe::relacher(int numOrigine, int numDestination,
-		int cout, std::vector<int> & p_chemin) {
-	if(numDestination > (numOrigine+ cout))
-	{
-		numDestination =  (numOrigine+ cout);
+void Graphe::relacher(int numOrigine, int numDestination, int leurcout,
+		std::vector<int> & p_chemin) {
+	if (numDestination > (numOrigine + leurcout)) {
+		numDestination = (numOrigine + leurcout);
 		p_chemin[numDestination] = numOrigine;
 	}
 }
@@ -672,14 +675,14 @@ std::vector<int> Graphe::min(std::vector<int> &vecteur_cout) {
 //!\param[in] p_sommetTraites l’ensemble des sommets traités par l’algorithme (pour ne pas traiter 2 fois le même sommet);
 //!\param[in] p_tableauCout  un tableau de coût de longueur |V| (le nombre de sommet du graphe);
 
-
 void Graphe::initGraphe(std::vector<int>& p_temp,
-		std::vector<int>& p_sommetTraites, std::vector<int>& p_tableauCout, int source) {
-	std::vector<int> V =  this->listerSommets();// une copie de la liste des sommets
+		std::vector<int>& p_sommetTraites, std::vector<int>& p_tableauCout,
+		int source) {
+	std::vector<int> S = this->listerSommets(); // une copie de la liste des sommets
 
-	for (std::vector<int>::iterator it = V.begin(); it != V.end(); it++) {
+	for (std::vector<int>::iterator it = S.begin(); it != S.end(); it++) {
 		p_temp.push_back(*it);
-		if( *it == source)
+		if (*it == source)
 			p_tableauCout.push_back(0);
 		else
 			p_tableauCout.push_back(INFINI);
@@ -704,42 +707,57 @@ void Graphe::initGraphe(std::vector<int>& p_temp,
 //! \return int	Le coût du parcours trouve.
 
 //TODO a tester
-int Graphe::dijkstra(const int& p_Origine, const int& p_Destination,
+int Graphe::dijkstra(const int & p_Origine, const int & p_Destination,
 		std::vector<int> & p_chemin) {
 	{
 
-		std::vector<int> S;// les sommets solutionnés
-		std::vector<int> T;// fils d'Attente suivant le cout
-		std::vector<int> P;//tableau des sommet precedents
-		std::vector<int> Y;// tabelau des cout
+		std::vector<int> T; // les sommets solutionnés
+		std::vector<int> Q; // fils d'Attente suivant le cout
+		std::vector<int> D; // tabelau des cout
+		std::vector<int> P(this->nombreSommets()); //tableau des sommet precedents
 
-		initGraphe(T, P, Y,p_Origine);
-		int minval ; // min = numero de coup minimal
-		int j ;//  sa position du coup minimal
-		int trouve  = 0;
-
+		initGraphe(Q, T, D, p_Origine);
+		int minval; // min = numero de coup minimal
+		int j; //  sa position du coup minimal
+		int trouve = 0;
 
 		try {
 
+			while (!Q.empty() && trouve == 0) {
 
+				minval = min(D)[0];
+				j = min(D)[1];
+				if (this->_getSommet(j)->etat == false) {
+					T.push_back(minval);
 
-			while(!T.empty() && trouve ==0) {
-
-				minval =  min(Y)[0];
-				j = min(Y)[1];
-				T[j] = minval;
-				S.push_back(T[j]);
-				if(!this->listerSommetsAdjacents(j).empty())
-				for (std::vector<int>::iterator k = this->listerSommetsAdjacents(j).begin(); k!= this->listerSommetsAdjacents(j).end(); k++ ){
-
-					cout<<*k<<endl;
-					//relacher(j, *(k), this->getCoutArc(j,*(k)), p_chemin);
-
+					this->_getSommet(minval)->etat = true;
 
 				}
+				cout << getCoutArc(Q[j], 69) << endl;
+				//if(!this->listerSommetsAdjacents(Q[j]).empty())
+				cout << "le sommet" << Q[j] << " a "
+						<< listerSommetsAdjacents(Q[j]).size()
+						<< " sommets adjacent" << endl;
+				for(std::vector<int>::iterator k =Q.begin();k!= Q.end(); k++) {
+					std::vector<int>adj = this->listerSommetsAdjacents(minval);
+					std::vector<int>::iterator it ;
+					it= find(adj.begin(),adj.end(), *k);
+					if(it != this->listerSommetsAdjacents(minval).end())
+					{
+					int temp = D[j]+ this->getCoutArc(minval, *k);
+					if(temp < D[*k -1])
+					{
+						D[*k -1] = temp;
+						P[*k -1] = minval;
+					}
+					}
+					//cout<<T.size()<<endl;
+					//relacher(D[Q[j]], D[*k], this->getCoutArc(Q[j], *k), P);
 
+				}
+				Q.erase(Q.begin() - j);
 			}
-			return Y[p_Destination];
+
 		} catch (std::bad_alloc & erreur) {
 
 			throw erreur;

@@ -359,11 +359,12 @@ class Graphe
 		//-------------fonction dde parcout------------
 		int bellmanFord(const int& p_Origine, const int& p_Destination,
 					std::vector<int> & p_chemin);
-		int dijkstra(const int& p_Origine, const int& p_Destination,
+		int dijkstra(const int & p_Origine, const int & p_Destination,
 					std::vector<int> & p_chemin);
 
 		void initGraphe(std::vector<int>& temp, std::vector<int>&sommetTraites,std::vector<int>&tableauCout, int  source);
 		void relacher(int, int, int, std::vector<int>&);
+		int getIndiceSommet(std::vector<int> vect, int val);
 	private:
 
 	// ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé
