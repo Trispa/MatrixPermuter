@@ -191,13 +191,6 @@ class Graphe
 		 */
 		void enleverArc(int numOrigine, int numDestination);
 
-		/**
-		 * init graphe   for Dijkstra or bellmanford
-		 *
-		 */
-		void initGraphe(std::vector<int>& temp, std::vector<int>&sommetTraites,std::vector<int>&tableauCout);
-
-		std::vector<int> min(std::vector<int> &vecteur_cout);
 
 
 
@@ -276,7 +269,20 @@ class Graphe
 		 * \exception	logic_error		Le sommet n'existe pas
 		 */
 		std::string getNomSommet(int numero) const;
-
+		/**
+		* \brief		Retourne l'etat du sommet dont le numéro est passé en argument
+		* \pre			Le sommet doit exister
+		* \post		Le graphe reste inchangé.
+		* \exception	logic_error		Le sommet n'existe pas
+		*/
+		bool  getEtatSommet(int numero) const;
+		/**
+		* \brief		met à jour l'etat du sommet dont le numéro est passé en argument
+		* \pre			Le sommet doit exister
+		* \post		Le graphe reste inchangé.
+		* \exception	logic_error		Le sommet n'existe pas
+		*/
+		void setEtatSommet(int numero, bool etat) ;
 		/**
 		 * \brief		Retourne les coordonnées d'un sommet
 		 * \pre			Le sommet doit exister
@@ -356,15 +362,13 @@ class Graphe
 		 */
 		friend std::ostream& operator << (std::ostream& out, const Graphe& g);
 
-		//-------------fonction dde parcout------------
-		int bellmanFord(const int& p_Origine, const int& p_Destination,
-					std::vector<int> & p_chemin);
-		int dijkstra(const int & p_Origine, const int & p_Destination,
-					std::vector<int> & p_chemin);
+//		//-------------fonction dde parcout------------
+//		int bellmanFord(const int& p_Origine, const int& p_Destination,
+//					std::vector<int> & p_chemin);
+//		int dijkstra( int & p_Origine,  int & p_Destination,
+//					std::vector<int> & p_chemin);
 
-		void initGraphe(std::vector<int>& temp, std::vector<int>&sommetTraites,std::vector<int>&tableauCout, int  source);
-		void relacher(int, int, int, std::vector<int>&);
-		int getIndiceSommet(std::vector<int> vect, int val);
+
 	private:
 
 	// ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé

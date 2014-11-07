@@ -17,7 +17,7 @@ int main(void) {
 	std::ifstream myfile("Metro.txt");
 	Metro * metroParis;
 	metroParis = new Metro(myfile);
-	int source = 71;
+	int source = 5;
 	int destination= 55;
 	int duree;
 //	cout<<"-----------------------------------------------------------------------------------"<<endl;

@@ -82,8 +82,10 @@ class Metro
 		 */
 		void afficherStations();
 
-
-
+		std::vector<int> min(std::vector<int> &vecteur_cout);
+		void initGraphe(std::vector<int>& temp, std::vector<int>&sommetTraites,std::vector<int>&tableauCout, const int & source);
+		void relacher(int, int, int, std::vector<int>&);
+		int getIndiceSommet(std::vector<int> vect, int val);
 
 	// ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé
 	//	Chemin le plus court, chemin le plus long...

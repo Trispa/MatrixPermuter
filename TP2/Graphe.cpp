@@ -6,11 +6,7 @@
  */
 
 #include "Graphe.h"
-#include <stdexcept>
-#include <string>
-#include <fstream>
-#include <iostream>
-#include <algorithm>
+
 using namespace std;
 
 // --------------------------------------------------------------------------------------------
@@ -421,6 +417,37 @@ std::string Graphe::getNomSommet(int numero) const {
 
 	return sommet->nom;
 }
+/**
+ * \fn		bool  Graphe::getEtatSomet(int numero) const throw(std::logic_error)
+ *
+ * \param[in]	numero	Le numéro du sommet
+ *
+ * \return	l'Etat du sommet recherché
+ */
+bool  Graphe::getEtatSommet(int numero) const
+{
+	Sommet * sommet = _getSommet(numero);
+
+		if (sommet == 0)
+			throw logic_error("Graphe::getEtatSommet : Le sommet n'existe pas");
+
+		return sommet->etat;
+}
+/**
+ * \fn		void Graphe::getEtatSommet(int numero) throw(std::logic_error)
+ *
+ * \param[in]	numero	Le numéro du sommet
+ * \param[in]	etat	nouvel etat du sommet
+ */
+void Graphe::setEtatSommet(int numero, bool etat)
+{
+	Sommet * sommet = _getSommet(numero);
+
+		if (sommet == 0)
+			throw logic_error("Graphe::getEtatSommet : Le sommet n'existe pas");
+
+		 sommet->etat = etat ;
+}
 
 /**
  * \fn		void Graphe::getCoordonnesSommet(int numero, int& x, int& y) const throw(std::logic_error)
@@ -640,54 +667,6 @@ ostream& operator <<(ostream& out, const Graphe& g) {
 	return out;
 }
 
-//!\brief relacher des arc pour mettre a jour le veceur des coups
-
-//TODO a tester
-void Graphe::relacher(int numOrigine, int numDestination, int leurcout,
-		std::vector<int> & p_chemin) {
-	if (numDestination > (numOrigine + leurcout)) {
-		numDestination = (numOrigine + leurcout);
-		p_chemin[numDestination] = numOrigine;
-	}
-}
-//!\brief cout minimul et sa position
-//!\param[in] vecteur_cout
-//!\param[out]vecteur de deux dimention contenent la valeur et sa position
-//!\return une vecteur de deux dimention avec le premier element le mimimu et le second sa position dans le tableau
-std::vector<int> Graphe::min(std::vector<int> &vecteur_cout) {
-	int valmin = *(vecteur_cout.begin()); //valeur minimale initialiser a la premier valeur du vecteur
-	int positionMin = 0; // position de la valeur initiale
-	std::vector<int> minInfo; // vecteur a retourner
-	for (size_t i = 0; i < vecteur_cout.size(); i++) {
-		if (valmin > vecteur_cout[i]) {
-			valmin = vecteur_cout[i];
-			positionMin = i; //Stockage de position initiale
-		}
-	}
-
-	minInfo.push_back(valmin);
-	minInfo.push_back(positionMin);
-
-	return minInfo;
-}
-//!\brief Initialiser les données pour le calcule du chemin le plus court par Dijkstra et bellmanford
-//!\param[in] p_temp  un ensemble temporaire de sommets d’un graphe (pour ne pas modifier le vecteur de l'ensemlbe des sommets du graphe);
-//!\param[in] p_sommetTraites l’ensemble des sommets traités par l’algorithme (pour ne pas traiter 2 fois le même sommet);
-//!\param[in] p_tableauCout  un tableau de coût de longueur |V| (le nombre de sommet du graphe);
-
-void Graphe::initGraphe(std::vector<int>& p_temp,
-		std::vector<int>& p_sommetTraites, std::vector<int>& p_tableauCout,
-		int source) {
-	std::vector<int> S = this->listerSommets(); // une copie de la liste des sommets
-
-	for (std::vector<int>::iterator it = S.begin(); it != S.end(); it++) {
-		p_temp.push_back(*it);
-		if (*it == source)
-			p_tableauCout.push_back(0);
-		else
-			p_tableauCout.push_back(INFINI);
-	}
-}
 
 //!
 //! \brief Trouve le plus court chemin entre deux points en utilisant l'algorithme de Dijkstra et le retourne.
@@ -707,67 +686,66 @@ void Graphe::initGraphe(std::vector<int>& p_temp,
 //! \return int	Le coût du parcours trouve.
 
 //TODO a tester
-int Graphe::dijkstra(const int & p_Origine, const int & p_Destination,
-		std::vector<int> & p_chemin) {
-	{
+//int Graphe::dijkstra( int & p_Origine, int & p_Destination,
+//		std::vector<int> & p_chemin) {
+//	{
+//
+//		std::vector<int> T; // les sommets solutionnés
+//		std::vector<int> Q; // fils d'Attente suivant le cout
+//		std::vector<int> D; // tabelau des cout
+//		std::vector<int> P(this->nombreSommets()); //tableau des sommet precedents
+//
+//		initGraphe(Q, T, D, p_Origine);
+//		int minval; // min = numero de coup minimal
+//		int j; //  sa position du coup minimal
+//		int trouve = 0;
+//
+//		try {
+//
+//			while (!Q.empty() && trouve == 0) {
+//
+//				minval = min(D)[0];
+//				j = min(D)[1];
+//				if (this->_getSommet(j)->etat == false) {
+//					T.push_back(minval);
+//					Q.erase(Q.begin() - j);
+//					this->_getSommet(minval)->etat = true;
+//
+//				}
+//
+//
+//				std::vector<int>adj = this->listerSommetsAdjacents(minval);
+//				for(std::vector<int>::iterator k =adj.begin();k!= adj.end(); k++) {
+//					std::vector<int>::iterator it ;
+//					it= find(Q.begin(),Q.end(), *k);
+//					if(it != this->listerSommetsAdjacents(minval).end())
+//					{
+//						cout<<"les sommets adjacent à"<<minval<<"sont"<<endl;
+//						cout<< Q[*it - 1];
+////					int temp = D[j]+ this->getCoutArc(minval, *k);
+////					if(temp < D[*k -1])
+////					{
+////						D[*k -1] = temp;
+////						P[*k -1] = minval;
+////					}
+//					}
+//					//cout<<T.size()<<endl;
+//					//relacher(D[Q[j]], D[*k], this->getCoutArc(Q[j], *k), P);
+//
+//				}
+//				cout <<endl;
+//			}
+//
+//		} catch (std::bad_alloc & erreur) {
+//
+//			throw erreur;
+//		}
+//
+//		return -1;
+//		// TODO
+//	}
 
-		std::vector<int> T; // les sommets solutionnés
-		std::vector<int> Q; // fils d'Attente suivant le cout
-		std::vector<int> D; // tabelau des cout
-		std::vector<int> P(this->nombreSommets()); //tableau des sommet precedents
 
-		initGraphe(Q, T, D, p_Origine);
-		int minval; // min = numero de coup minimal
-		int j; //  sa position du coup minimal
-		int trouve = 0;
-
-		try {
-
-			while (!Q.empty() && trouve == 0) {
-
-				minval = min(D)[0];
-				j = min(D)[1];
-				if (this->_getSommet(j)->etat == false) {
-					T.push_back(minval);
-
-					this->_getSommet(minval)->etat = true;
-
-				}
-				cout << getCoutArc(Q[j], 69) << endl;
-				//if(!this->listerSommetsAdjacents(Q[j]).empty())
-				cout << "le sommet" << Q[j] << " a "
-						<< listerSommetsAdjacents(Q[j]).size()
-						<< " sommets adjacent" << endl;
-				for(std::vector<int>::iterator k =Q.begin();k!= Q.end(); k++) {
-					std::vector<int>adj = this->listerSommetsAdjacents(minval);
-					std::vector<int>::iterator it ;
-					it= find(adj.begin(),adj.end(), *k);
-					if(it != this->listerSommetsAdjacents(minval).end())
-					{
-					int temp = D[j]+ this->getCoutArc(minval, *k);
-					if(temp < D[*k -1])
-					{
-						D[*k -1] = temp;
-						P[*k -1] = minval;
-					}
-					}
-					//cout<<T.size()<<endl;
-					//relacher(D[Q[j]], D[*k], this->getCoutArc(Q[j], *k), P);
-
-				}
-				Q.erase(Q.begin() - j);
-			}
-
-		} catch (std::bad_alloc & erreur) {
-
-			throw erreur;
-		}
-
-		return -1;
-		// TODO
-	}
-
-}
 //!
 //! \brief Trouve le plus court chemin entre deux points en utilisant l'algorithme de Bellman-Ford et le retourne.
 //!
@@ -786,11 +764,11 @@ int Graphe::dijkstra(const int & p_Origine, const int & p_Destination,
 //! \return int	Le coût du parcours trouve.
 //!
 //TODO a impleneter et a tester
-int Graphe::bellmanFord(const int& p_Origine, const int& p_Destination,
-		std::vector<int> & p_chemin) {
-	return -1;
-	//TODO
-}
+//int Graphe::bellmanFord(const int& p_Origine, const int& p_Destination,
+//		std::vector<int> & p_chemin) {
+//	return -1;
+//	//TODO
+//}
 
 //!
 // ØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØ
