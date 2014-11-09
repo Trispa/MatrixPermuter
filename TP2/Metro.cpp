@@ -15,7 +15,6 @@
 
 using namespace std;
 
-
 // ØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØ
 //	Constructeur et destructeur
 // _____________________________________________________________________________________________
@@ -24,9 +23,9 @@ using namespace std;
  * \fn			Metro::Metro(std::ifstream &f) throw(std::logic_error, std::bad_alloc)
  * \param[in]	f un flux sur un fichier d'entrÈe
  */
-Metro::Metro(std::ifstream &f)
-{
-	if (f  == NULL) throw std::logic_error("Metro: fichier non ouvert\n");
+Metro::Metro(std::ifstream &f) {
+	if (f == NULL)
+		throw std::logic_error("Metro: fichier non ouvert\n");
 
 	//Lecture Ligne Entete
 	int nbStations, noStation, nbLiens;
@@ -35,56 +34,47 @@ Metro::Metro(std::ifstream &f)
 	//std::cout << nbStations << " " << nbLiens << std::endl;
 
 	//Lecture du nom des stations
-	std:: vector<std::string> l; //Pour le nom des stations
+	std::vector<std::string> l; //Pour le nom des stations
 	l.resize(nbStations);
 	char buff[255];
 
-	for(int i =0; i< nbStations ; i++)
-	{
+	for (int i = 0; i < nbStations; i++) {
 
 		f >> noStation;
 		f.ignore();
 		f.getline(buff, 100);
-		std:: string s(buff);
+		std::string s(buff);
 		l[i] = s;
 	}
 
 	//Lecture des coordonnées et placement des sommets en mémoire
 	std::string ligne;
-	if(getline(f,ligne))
-	{
+	if (getline(f, ligne)) {
 		//std::cout << ligne << endl; //ignorer ce séparateur
-	}
-	else
-	{
+	} else {
 		throw logic_error("Metro::Metro : $ is expected");
 	}
-	for(int i=0; i <nbStations; ++i)
-	{
-		if(getline(f,ligne))
-			{
-				int aInt, x, y;
-				std::stringstream ss(ligne);
-				ss >> aInt >> x >> y;
-				if (aInt!=i)
-				{
-					throw logic_error("Metro::Metro : aInt==i expected");
-				}
-				//std::cout << i << " " << x << " " << y << std::endl;
-				unGraphe.ajouterSommet(i, l[i], x, y);
+	for (int i = 0; i < nbStations; ++i) {
+		if (getline(f, ligne)) {
+			int aInt, x, y;
+			std::stringstream ss(ligne);
+			ss >> aInt >> x >> y;
+			if (aInt != i) {
+				throw logic_error("Metro::Metro : aInt==i expected");
 			}
-			else
-			{
-				throw logic_error("Metro::Metro : text line is expected");
-			}
+			//std::cout << i << " " << x << " " << y << std::endl;
+			unGraphe.ajouterSommet(i, l[i], x, y);
+		} else {
+			throw logic_error("Metro::Metro : text line is expected");
+		}
 	}
 
 	//Lecture des arc et placement des arcs dans le graphe en mémoire
-	f.ignore();f.ignore();
+	f.ignore();
+	f.ignore();
 	int s1, s2, l_cout;
 	//std::cout << "$" << endl;
-	for (int i =0; i<nbLiens; i++)
-	{
+	for (int i = 0; i < nbLiens; i++) {
 		f >> s1 >> s2 >> l_cout;
 		unGraphe.ajouterArc(s1, s2, l_cout);
 		//std::cout << s1 << " " << s2 << " " << l_cout << std::endl;
@@ -92,17 +82,13 @@ Metro::Metro(std::ifstream &f)
 }
 
 /**
-* \fn		Metro::Metro(const Metro &source) throw (std::bad_alloc)
-*
-* \param[in]	source	La source du mÈtro ‡ copier
-*/
-Metro::Metro(const Metro &source)
-{
+ * \fn		Metro::Metro(const Metro &source) throw (std::bad_alloc)
+ *
+ * \param[in]	source	La source du mÈtro ‡ copier
+ */
+Metro::Metro(const Metro &source) {
 	this->unGraphe = source.unGraphe;
 }
-
-
-
 
 // ØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØ
 //	Affichage
@@ -111,8 +97,7 @@ Metro::Metro(const Metro &source)
 /**
  * \fn			void Metro::afficherStations()
  */
-void Metro::afficherStations()
-{
+void Metro::afficherStations() {
 	std::vector<std::string> stations = this->unGraphe.listerNomsSommets();
 	afficherStations(stations);
 }
@@ -121,18 +106,15 @@ void Metro::afficherStations()
  * \fn			void Metro::afficherStations(std::vector<std::string>&v)
  * \param[in]	v un vector de string
  */
-void Metro::afficherStations(std::vector<std::string> & v)
-{
-	if (v.size() == 0)
-	{
+void Metro::afficherStations(std::vector<std::string> & v) {
+	if (v.size() == 0) {
 		std::cout << "La liste est vide\n";
 		return;
 	}
 
-	for (unsigned int i=v.size(); i>0; i--)
- 	{
-	 	std::cout << v[i-1] << std::endl;
- 	}
+	for (unsigned int i = v.size(); i > 0; i--) {
+		std::cout << v[i - 1] << std::endl;
+	}
 }
 //!\brief relacher des arc pour mettre a jour le veceur des coups
 
@@ -171,23 +153,35 @@ std::vector<int> Metro::min(std::vector<int> &vecteur_cout) {
 
 void Metro::initGraphe(std::vector<int>& p_temp,
 		std::vector<int>& p_sommetTraites, std::vector<int>& p_tableauCout,
-		const int & source) {
+		int & source) {
 	std::vector<int> S = unGraphe.listerSommets(); // une copie de la liste des sommets
 
 	for (std::vector<int>::iterator it = S.begin(); it != S.end(); it++) {
 		p_temp.push_back(*it);
-		unGraphe.setEtatSommet((*it),false);
+		unGraphe.setEtatSommet((*it), false);
 
 		if (*it == source)
 			p_tableauCout.push_back(0);
 		else
 			p_tableauCout.push_back(INFINI);
 	}
-		cout<<"tableau des cout"<<endl;
-		for(std::vector<int>::iterator k =p_tableauCout.begin();k!= p_tableauCout.end(); k++)
-			cout<<*k<<endl;
+	cout << "tableau des cout" << endl;
+	for (std::vector<int>::iterator k = p_tableauCout.begin();
+			k != p_tableauCout.end(); k++)
+		cout << *k << endl;
 }
 
+int Metro::getIndiceSommet(std::vector<int> vect, int val) {
+	int i = 0;
+	for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++) {
+
+		if (*it == val) {
+			return i;
+		}
+		i++;
+	}
+	return -1;
+}
 
 /**
  * \fn std::vector<std::string> Metro::dijkstra(const int & origine, const int & destination, int & nbSec)
@@ -197,67 +191,104 @@ void Metro::initGraphe(std::vector<int>& p_temp,
  * \return  vecteur de sommet composant le chemin le plus court dentre l'origine et la destination
  */
 
-std::vector<std::string> Metro::dijkstra(const int & p_origine, const int & p_destination, int & nbSec)
-{
+std::vector<std::string> Metro::dijkstra(const int & p_origine,
+		const int & p_destination, int & nbSec) {
 	std::vector<string> cheminParNOM;
+	std::vector<int> S = unGraphe.listerSommets(); // une copie de la liste des sommets
 	std::vector<int> T; // les sommets solutionnés
 	std::vector<int> Q; // fils d'Attente suivant le cout
 	std::vector<int> D; // tabelau des cout
-	std::vector<int> P(unGraphe.nombreSommets()); //tableau des sommet precedents
+	std::vector<int> P; //tableau des sommet precedents
 
-	this->initGraphe(Q, T, D, p_origine);
-	int minval; // min = numero de coup minimal
-	int j; //  sa position du coup minimal
+	//this->initGraphe(Q, T, D, source);
+	//-----------INITIALISATION POUR DIJKSTRA----------------
+	for (std::vector<int>::iterator it = S.begin(); it != S.end(); it++) {
+		Q.push_back(*it);
+		unGraphe.setEtatSommet((*it), 0);
+
+		if (*it == p_origine)
+			D.push_back(0);
+		else
+			D.push_back(INFINI);
+	}
+	cout << "tableau des cout" << endl;
+	for (std::vector<int>::iterator k = D.begin(); k != D.end(); k++)
+		cout << *k << endl;
+
+
 	int trouve = 0;
+	vector<int>::iterator itdebut = D.begin(); // indice pour le vecteur T
 
 	try {
 
-		while (!Q.empty() && trouve == 0) {
+		while (!Q.empty() && trouve == 0 && itdebut != D.end()) {
 
-			minval = min(D)[0];
-			j = min(D)[1];
-			if (!unGraphe.getEtatSommet(minval)) {
-				T.push_back(minval);
-				Q.erase(Q.begin() - j);
-				unGraphe.setEtatSommet(minval,true);
+			int coutMin = *std::min_element(itdebut, D.end()); // coup minimal
+			vector<int> tempD = D; //tableau temporaire des coûts
+			cout << "le cout minimal est :" << coutMin << " " << endl;
+			int positionCoutMin = this->getIndiceSommet(D, coutMin);//  la position du coup minimal
+			tempD.erase(tempD.end() - positionCoutMin); //on supprime le coût minimal pour ne pas le considerer a la prochaine itteration, sinon il restera le coût minimum
+			coutMin = *std::min_element(tempD.begin(), tempD.end());
+			cout << "sapostion est :" << positionCoutMin << " " << endl;
+			positionCoutMin = this->getIndiceSommet(tempD, coutMin);
 
-				}
-			if(minval == p_destination)
-			{
+			cout << "le sommet correspondant est :" << Q[positionCoutMin] << " "
+					<< endl;
+
+			//si on ateint la destination
+			if (Q[positionCoutMin] == p_destination) {
 				trouve = 1;
 			}
+			//verifier si le somet a eté deja traité
+			 if (!unGraphe.getEtatSommet(Q[positionCoutMin])) {
+				T.push_back(Q[positionCoutMin]);
 
-			std::vector<int>adj = unGraphe.listerSommetsAdjacents(minval);
-			cout<<"les sommets adjacent à"<<minval<<"sont"<<endl;
-			for(std::vector<int>::iterator k =adj.begin();k!= adj.end(); k++) {
-				std::vector<int>::iterator it ;
-				it= find(Q.begin(),Q.end(), *k);
-				if(it != unGraphe.listerSommetsAdjacents(minval).end()){
-
-					cout<< Q[*it - 1]<<",";
-	//				int temp = D[j]+ this->getCoutArc(minval, *k);
-	//				if(temp < D[*k -1])
-	//				{
-	//					D[*k -1] = temp;
-	//					P[*k -1] = minval;
-	//				}
-				}
-				//cout<<T.size()<<endl;
-				//relacher(D[Q[j]], D[*k], this->getCoutArc(Q[j], *k), P);
-
+				unGraphe.setEtatSommet(Q[positionCoutMin],1); //marquer le sommet
 			}
-			cout <<endl;
+
+			std::vector<int> adj = unGraphe.listerSommetsAdjacents(
+					Q[positionCoutMin]);
+			cout << "les sommets adjacents à " << Q[positionCoutMin] << " sont"
+					<< " " << endl;
+//			for (std::vector<int>::iterator it = Q.begin(); it != Q.end();
+//					it++) {
+//				if (unGraphe.arcExiste(positionCoutMin + 1, *it))
+//					D[*it - 1] = std::min(D[*it - 1],
+//							D[positionCoutMin]
+//									+ unGraphe.getCoutArc(positionCoutMin + 1,
+//											*it));
+//
+//				P.push_back(Q[positionCoutMin]);
+//			}
+			for(std::vector<int>::iterator k =adj.begin();k!= adj.end(); k++) {
+				std::vector<int>::iterator it = find(Q.begin(),Q.end(), *k);
+				if(it != unGraphe.listerSommetsAdjacents(coutMin).end()){
+
+					cout<< Q[*it]<<",";
+					int temp = D[positionCoutMin]+ unGraphe.getCoutArc(Q[positionCoutMin], *k);
+					if(temp < D[*k -1])
+					{
+						D[*k -1] = temp;
+						P.push_back(Q[positionCoutMin]);
+					}
+				}
+
+		}
+			cout << endl;
+			itdebut++;
+			Q.erase(Q.begin() + positionCoutMin);
+
 		}
 
-		} catch (std::bad_alloc & erreur) {
+	} catch (std::bad_alloc & erreur) {
 
-			throw erreur;
-		}
+		throw erreur;
+	}
 
-
-	for(std::vector<int>::iterator it =  P.begin(); it != P.end(); it++)
-	{
+	cout << "le chemin le plus court est :" << endl;
+	for (std::vector<int>::iterator it = P.begin(); it != P.end(); it++) {
 		cheminParNOM.push_back(unGraphe.getNomSommet(*it));
+		cout << *it << endl;
 	}
 	return cheminParNOM;
 }
@@ -270,16 +301,15 @@ std::vector<std::string> Metro::dijkstra(const int & p_origine, const int & p_de
  * \return  vecteur de sommet composant le chemin le plus court entre l'origine et la destination
  */
 
-
-std::vector<std::string>Metro::bellManFord(const int & origine, const int & destination, int & nbSec)
-{
-	std::vector<int>  chemin;
+std::vector<std::string> Metro::bellManFord(const int & origine,
+		const int & destination, int & nbSec) {
+	std::vector<int> chemin;
 	std::vector<string> cheminParNOM;
 	//this->unGraphe.bellmanFord(origine, destination,chemin);
 
-	for(std::vector<int>::iterator it =  chemin.begin(); it != chemin.end(); it++)
-		{
-			cheminParNOM.push_back(unGraphe.getNomSommet(*it));
-		}
-		return cheminParNOM;
+	for (std::vector<int>::iterator it = chemin.begin(); it != chemin.end();
+			it++) {
+		cheminParNOM.push_back(unGraphe.getNomSommet(*it));
+	}
+	return cheminParNOM;
 }
