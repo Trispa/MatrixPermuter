@@ -85,7 +85,7 @@ class Metro
 		std::vector<int> min(std::vector<int> &vecteur_cout);
 		void initGraphe(std::vector<int>& temp, std::vector<int>&sommetTraites,std::vector<int>&tableauCout, int & source);
 		void relacher(int, int, int, std::vector<int>&);
-		int getIndiceSommet(std::vector<int> vect, int val);
+		int getIndiceSommet(std::vector<int> &, std::vector<bool>&);
 
 	// ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé
 	//	Chemin le plus court, chemin le plus long...

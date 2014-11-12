@@ -171,16 +171,14 @@ void Metro::initGraphe(std::vector<int>& p_temp,
 		cout << *k << endl;
 }
 
-int Metro::getIndiceSommet(std::vector<int> vect, int val) {
-	int i = 0;
-	for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++) {
+int Metro::getIndiceSommet(std::vector<int> & dist, std::vector<bool> & etats ) {
+	std::vector<int> S = unGraphe.listerSommets();
+	int min = INFINI, min_index;
+	 for (int v = 0; v < S.size(); v++)
+	     if (etats[v] == false && dist[v] <= min)
+	         min = dist[v], min_index = v;
 
-		if (*it == val) {
-			return i;
-		}
-		i++;
-	}
-	return -1;
+	   return min_index;
 }
 
 /**
@@ -196,99 +194,115 @@ std::vector<std::string> Metro::dijkstra(const int & p_origine,
 	std::vector<string> cheminParNOM;
 	std::vector<int> S = unGraphe.listerSommets(); // une copie de la liste des sommets
 	std::vector<int> T; // les sommets solutionnés
-	std::vector<int> Q; // fils d'Attente suivant le cout
-	std::vector<int> D; // tabelau des cout
-	std::vector<int> P; //tableau des sommet precedents
+	std::vector<int> Q(S.size()); // fils d'Attente suivant le cout
+	std::vector<int> D(S.size()); // tabelau des cout
+	std::vector<int> P(S.size()); //tableau des sommet precedents
+	std::vector<bool> etats; // tableau des etats
 
-	//this->initGraphe(Q, T, D, source);
 	//-----------INITIALISATION POUR DIJKSTRA----------------
-	for (std::vector<int>::iterator it = S.begin(); it != S.end(); it++) {
-		Q.push_back(*it);
-		unGraphe.setEtatSommet((*it), 0);
+	for( size_t  v = 0;v<S.size(); v++ )
+		{
+			Q[v] = S[v];
+			etats[v] = false;
+			D[v] = INFINI;
+		}
 
-		if (*it == p_origine)
-			D.push_back(0);
-		else
-			D.push_back(INFINI);
-	}
+	D[p_origine] = 0;
 	cout << "tableau des cout" << endl;
 	for (std::vector<int>::iterator k = D.begin(); k != D.end(); k++)
 		cout << *k << endl;
 
 
 	int trouve = 0;
-	vector<int>::iterator itdebut = D.begin(); // indice pour le vecteur T
+	unsigned int itdebut =0; // indice pour le vecteur T
 
-	try {
+//	try {
 
-		while (!Q.empty() && trouve == 0 && itdebut != D.end()) {
+		while (!Q.empty() && trouve == 0) {
 
-			int coutMin = *std::min_element(itdebut, D.end()); // coup minimal
-			vector<int> tempD = D; //tableau temporaire des coûts
-			cout << "le cout minimal est :" << coutMin << " " << endl;
-			int positionCoutMin = this->getIndiceSommet(D, coutMin);//  la position du coup minimal
-			tempD.erase(tempD.end() - positionCoutMin); //on supprime le coût minimal pour ne pas le considerer a la prochaine itteration, sinon il restera le coût minimum
-			coutMin = *std::min_element(tempD.begin(), tempD.end());
-			cout << "sapostion est :" << positionCoutMin << " " << endl;
-			positionCoutMin = this->getIndiceSommet(tempD, coutMin);
-
-			cout << "le sommet correspondant est :" << Q[positionCoutMin] << " "
+//			int coutMin = *std::min_element(itdebut, D.end()); // coup minimal
+//			cout << "le cout minimal est :" << coutMin << " " << endl;
+			int u = this->getIndiceSommet(D, etats); //  la position du coup minimal
+			cout << "la position du coup minimal est   :" << u << " " << endl;
+			etats[u] = true;
+			int numSommeCoutMin = Q[u];
+			cout << "le sommet correspondant est :" << numSommeCoutMin << " "
 					<< endl;
-
 			//si on ateint la destination
-			if (Q[positionCoutMin] == p_destination) {
+			if (Q[u] == p_destination) {
 				trouve = 1;
 			}
-			//verifier si le somet a eté deja traité
-			 if (!unGraphe.getEtatSommet(Q[positionCoutMin])) {
-				T.push_back(Q[positionCoutMin]);
 
-				unGraphe.setEtatSommet(Q[positionCoutMin],1); //marquer le sommet
-			}
 
-			std::vector<int> adj = unGraphe.listerSommetsAdjacents(
-					Q[positionCoutMin]);
-			cout << "les sommets adjacents à " << Q[positionCoutMin] << " sont"
+			Q.erase(Q.begin() + u);
+			T.push_back(numSommeCoutMin);
+
+
+			std::vector<int> adj = unGraphe.listerSommetsAdjacents(numSommeCoutMin);
+			cout << "les sommets adjacents à " << numSommeCoutMin << " sont"
 					<< " " << endl;
-//			for (std::vector<int>::iterator it = Q.begin(); it != Q.end();
-//					it++) {
-//				if (unGraphe.arcExiste(positionCoutMin + 1, *it))
-//					D[*it - 1] = std::min(D[*it - 1],
-//							D[positionCoutMin]
-//									+ unGraphe.getCoutArc(positionCoutMin + 1,
-//											*it));
-//
-//				P.push_back(Q[positionCoutMin]);
-//			}
-			for(std::vector<int>::iterator k =adj.begin();k!= adj.end(); k++) {
-				std::vector<int>::iterator it = find(Q.begin(),Q.end(), *k);
-				if(it != unGraphe.listerSommetsAdjacents(coutMin).end()){
+			for(size_t v = 0;v<Q.size(); v++ )
+			{
+				if(unGraphe.arcExiste(u, Q[v]))
+				{
+					cout<< v <<",";
+					int temp = D[u] + unGraphe.getCoutArc(numSommeCoutMin,Q[v]);
+				if(!etats[u] && temp < D[Q[v]])
+				{
+					D[Q[v]] = temp;
+					P[Q[v]] = u;
 
-					cout<< Q[*it]<<",";
-					int temp = D[positionCoutMin]+ unGraphe.getCoutArc(Q[positionCoutMin], *k);
-					if(temp < D[*k -1])
-					{
-						D[*k -1] = temp;
-						P.push_back(Q[positionCoutMin]);
-					}
 				}
 
-		}
+				}
+			}
+//			for (std::vector<int>::iterator it = Q.begin(); it != Q.end();
+//					it++) {
+//				if (unGraphe.arcExiste(positionCoutMin + 1, *it) && etats[positionCoutMin]==false )
+//				{
+//					D[*it - 1] = std::min(D[*it - 1],
+//							numSommeCoutMin
+//									+ unGraphe.getCoutArc(positionCoutMin + 1,
+//											*it));
+//				cout<< Q[*it]<<",";
+//				P.push_back(numSommeCoutMin);
+//				}
+//
+//			}
+//			for(std::vector<int>::iterator k =adj.begin();k!= adj.end(); k++) {
+//				std::vector<int>::iterator it = find(Q.begin(),Q.end(), *k);
+//				if(it != unGraphe.listerSommetsAdjacents(numSommeCoutMin).end()){
+//
+//					cout<< *k<<",";
+//					int temp = D[positionCoutMin]+ unGraphe.getCoutArc(numSommeCoutMin, *k);
+//					if(temp < D[*k-1] && etats[positionCoutMin]==false)
+//					{
+//						D[*k-1] = temp;
+//						P.push_back(numSommeCoutMin);
+//					}
+//				}
+//
+//		}
+
+
 			cout << endl;
-			itdebut++;
-			Q.erase(Q.begin() + positionCoutMin);
+			itdebut ++;
 
 		}
-
-	} catch (std::bad_alloc & erreur) {
-
-		throw erreur;
-	}
+//
+//	} catch (std::bad_alloc & erreur) {
+//
+//		throw erreur;
+//	}
 
 	cout << "le chemin le plus court est :" << endl;
 	for (std::vector<int>::iterator it = P.begin(); it != P.end(); it++) {
-		cheminParNOM.push_back(unGraphe.getNomSommet(*it));
+
+		if(std::find(cheminParNOM.begin(), cheminParNOM.end(),unGraphe.getNomSommet(*it))== cheminParNOM.end()){
+			cheminParNOM.push_back(unGraphe.getNomSommet(*it)) ;
+
 		cout << *it << endl;
+		}
 	}
 	return cheminParNOM;
 }

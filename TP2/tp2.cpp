@@ -17,14 +17,14 @@ int main(void) {
 	std::ifstream myfile("Metro.txt");
 	Metro * metroParis;
 	metroParis = new Metro(myfile);
-	int source = 5;
-	int destination= 55;
+	int source = 0;
+	int destination= 6;
 	int duree;
-	cout<<"-----------------------------------------------------------------------------------"<<endl;
-	cout << "Entrez le numéro de la station de départ" << endl;
-	cin >> source;
-	cout << "Entrez le numéro de la station d'arrivée" << endl;
-	cin >> destination;
+//	cout<<"-----------------------------------------------------------------------------------"<<endl;
+//	cout << "Entrez le numéro de la station de départ" << endl;
+//	cin >> source;
+//	cout << "Entrez le numéro de la station d'arrivée" << endl;
+//	cin >> destination;
 	vector<string> cheminDjkstra = metroParis->dijkstra(source, destination,
 			duree);
 	cout<<"-----------------------------------------------------------------------------------"<<endl;
