@@ -116,73 +116,75 @@ void Metro::afficherStations(std::vector<std::string> & v) {
 		std::cout << v[i - 1] << std::endl;
 	}
 }
-//!\brief relacher des arc pour mettre a jour le veceur des coups
 
-//TODO a tester
-void Metro::relacher(int numOrigine, int numDestination, int leurcout,
-		std::vector<int> & p_chemin) {
-	if (numDestination > (numOrigine + leurcout)) {
-		numDestination = (numOrigine + leurcout);
-		p_chemin[numDestination] = numOrigine;
-	}
-}
-//!\brief cout minimul et sa position
-//!\param[in] vecteur_cout
-//!\param[out]vecteur de deux dimention contenent la valeur et sa position
-//!\return une vecteur de deux dimention avec le premier element le mimimu et le second sa position dans le tableau
-std::vector<int> Metro::min(std::vector<int> &vecteur_cout) {
-	int valmin = *(vecteur_cout.begin()); //valeur minimale initialiser a la premier valeur du vecteur
-	int positionMin = 0; // position de la valeur initiale
-	std::vector<int> minInfo; // vecteur a retourner
-	for (size_t i = 0; i < vecteur_cout.size(); i++) {
-		if (valmin > vecteur_cout[i]) {
-			valmin = vecteur_cout[i];
-			positionMin = i; //Stockage de position initiale
-		}
-	}
 
-	minInfo.push_back(valmin);
-	minInfo.push_back(positionMin);
-
-	return minInfo;
-}
 //!\brief Initialiser les données pour le calcule du chemin le plus court par Dijkstra et bellmanford
 //!\param[in] p_temp  un ensemble temporaire de sommets d’un graphe (pour ne pas modifier le vecteur de l'ensemlbe des sommets du graphe);
-//!\param[in] p_sommetTraites l’ensemble des sommets traités par l’algorithme (pour ne pas traiter 2 fois le même sommet);
+//!\param[in] p_predecesseurs le tableau des predecesseurs
 //!\param[in] p_tableauCout  un tableau de coût de longueur |V| (le nombre de sommet du graphe);
 
-void Metro::initGraphe(std::vector<int>& p_temp,
-		std::vector<int>& p_sommetTraites, std::vector<int>& p_tableauCout,
-		int & source) {
+
+void Metro::initForPathSearched(std::vector<int>& p_temp, std::vector<int> &p_predecesseurs, std::vector<int>& p_tableauCout,std::vector<bool>& etats
+		) {
 	std::vector<int> S = unGraphe.listerSommets(); // une copie de la liste des sommets
 
-	for (std::vector<int>::iterator it = S.begin(); it != S.end(); it++) {
-		p_temp.push_back(*it);
-		unGraphe.setEtatSommet((*it), false);
-
-		if (*it == source)
-			p_tableauCout.push_back(0);
-		else
-			p_tableauCout.push_back(INFINI);
-	}
-	cout << "tableau des cout" << endl;
-	for (std::vector<int>::iterator k = p_tableauCout.begin();
-			k != p_tableauCout.end(); k++)
-		cout << *k << endl;
-}
-
-int Metro::getIndiceSommet(std::vector<int> vect, int val) {
-	int i = 0;
-	for (std::vector<int>::iterator it = vect.begin(); it != vect.end(); it++) {
-
-		if (*it == val) {
-			return i;
+		for (size_t i  = 0; i <S.size() ;i++) {
+			etats[i] = false;
+			p_tableauCout[i] = INFINI;
+			p_temp[i]= S[i];
+			p_predecesseurs[i] = -1;
 		}
-		i++;
-	}
-	return -1;
 }
+//!
+//!\fn int Metro::getIndiceSommetDeCoutMin(std::vector<int> &vect, std::vector<bool>& etats)
+//!\param[in]vect le tableu des couts
+//!\param[in] etats tableau des etats
 
+int Metro::getIndiceSommetDeCoutMin(std::vector<int> &vect, std::vector<bool>& etats) {
+
+	int min = INFINI ;
+	int indiceMin ;
+	for (size_t i=0; i < vect.size(); i++) {
+		if (vect[i] < min) {
+			if(etats[i] ==false)
+			{
+				min = vect[i] ;
+				indiceMin = i;
+			}
+
+		}
+
+	}
+	return indiceMin;
+}
+//!\fn std::vector<std::string> Metro::cheminlePlusCourt(const std::vector<int>& predecesseurs,const int &source, const int &destination, int &nbSec)
+//!\param[in]predecesseurs le tableau des predecesseurs
+//!\param[in]source le numero de la station source
+//!\param[in]destination le numero de la station de  destination
+//!\param[in]nbSec le temps de parcour du chemin en second
+//!\exception std::logic_error les sommets sources et destination doivent exister
+
+std::vector<std::string> Metro::cheminlePlusCourt(const std::vector<int>& predecesseurs,const int &source, const int &destination, int &nbSec)
+		{
+
+
+			std::vector<std::string> chemin;
+			chemin.push_back(unGraphe.getNomSommet(destination));
+			int sommetActuel = destination;
+
+			while(sommetActuel!= source)
+			{
+				chemin.insert(chemin.begin(),unGraphe.getNomSommet(predecesseurs[sommetActuel]));
+				sommetActuel = predecesseurs[sommetActuel];
+				nbSec +=20;
+				if(sommetActuel == -1 || sommetActuel == destination)
+				{
+					nbSec = -1;
+				}
+			}
+
+			return chemin;
+		}
 /**
  * \fn std::vector<std::string> Metro::dijkstra(const int & origine, const int & destination, int & nbSec)
  * \param[in] origin le sommet origine du chemin, un entier constant
@@ -194,103 +196,76 @@ int Metro::getIndiceSommet(std::vector<int> vect, int val) {
 std::vector<std::string> Metro::dijkstra(const int & p_origine,
 		const int & p_destination, int & nbSec) {
 	std::vector<string> cheminParNOM;
-	std::vector<int> S = unGraphe.listerSommets(); // une copie de la liste des sommets
-	std::vector<int> T; // les sommets solutionnés
-	std::vector<int> Q; // fils d'Attente suivant le cout
-	std::vector<int> D; // tabelau des cout
-	std::vector<int> P; //tableau des sommet precedents
+	nbSec = 0;
+	std::vector<int> tableau_suivant_cout(unGraphe.listerSommets().size()); // fils d'Attente suivant le cout
+	std::vector<int> tableauDesCouts(unGraphe.listerSommets().size()); // tabelau des cout
+	std::vector<int> predecesseurs(unGraphe.listerSommets().size()); //tableau des sommet precedents
+	std::vector<bool> etats(unGraphe.listerSommets().size()); // tableau des etats
 
-	//this->initGraphe(Q, T, D, source);
 	//-----------INITIALISATION POUR DIJKSTRA----------------
-	for (std::vector<int>::iterator it = S.begin(); it != S.end(); it++) {
-		Q.push_back(*it);
-		unGraphe.setEtatSommet((*it), 0);
 
-		if (*it == p_origine)
-			D.push_back(0);
-		else
-			D.push_back(INFINI);
-	}
+	this->initForPathSearched(tableau_suivant_cout,predecesseurs,tableauDesCouts, etats);
+
+	//initialiser le cout du sommet origine
+	tableauDesCouts[p_origine]=0;
 	cout << "tableau des cout" << endl;
-	for (std::vector<int>::iterator k = D.begin(); k != D.end(); k++)
-		cout << *k << endl;
+	for (size_t i  = 0; i <tableauDesCouts.size() ;i++)
+		cout << tableauDesCouts[i] << endl;
 
 
 	int trouve = 0;
-	vector<int>::iterator itdebut = D.begin(); // indice pour le vecteur T
+//	try{
+		while (!tableau_suivant_cout.empty() && trouve == 0 ) {
 
-	try {
 
-		while (!Q.empty() && trouve == 0 && itdebut != D.end()) {
+			int positionCoutMin = this->getIndiceSommetDeCoutMin(tableauDesCouts,etats);//  la position du coup minimal
+			int SommetCouMin = positionCoutMin;
+			cout << "le sommet de cout minimal :" << SommetCouMin<< " "<< endl;
+			int coutMin = tableauDesCouts[SommetCouMin]; // coup minimal
+			cout << "son cout est  :" << coutMin << " " << endl;
+			cout << "sa position est  :" << positionCoutMin << " " << endl;
 
-			int coutMin = *std::min_element(itdebut, D.end()); // coup minimal
-			vector<int> tempD = D; //tableau temporaire des coûts
-			cout << "le cout minimal est :" << coutMin << " " << endl;
-			int positionCoutMin = this->getIndiceSommet(D, coutMin);//  la position du coup minimal
-			tempD.erase(tempD.end() - positionCoutMin); //on supprime le coût minimal pour ne pas le considerer a la prochaine itteration, sinon il restera le coût minimum
-			coutMin = *std::min_element(tempD.begin(), tempD.end());
-			cout << "sapostion est :" << positionCoutMin << " " << endl;
-			positionCoutMin = this->getIndiceSommet(tempD, coutMin);
 
-			cout << "le sommet correspondant est :" << Q[positionCoutMin] << " "
-					<< endl;
 
 			//si on ateint la destination
-			if (Q[positionCoutMin] == p_destination) {
+			if (SommetCouMin == p_destination) {
 				trouve = 1;
 			}
-			//verifier si le somet a eté deja traité
-			 if (!unGraphe.getEtatSommet(Q[positionCoutMin])) {
-				T.push_back(Q[positionCoutMin]);
 
-				unGraphe.setEtatSommet(Q[positionCoutMin],1); //marquer le sommet
+			cout<<"lelemenent a supprimer est :"<<SommetCouMin<<endl;
+			tableau_suivant_cout.erase(std::find(tableau_suivant_cout.begin(),tableau_suivant_cout.end(),SommetCouMin));
+			etats[positionCoutMin]= true;
+
+			std::vector<int> adj = unGraphe.listerSommetsAdjacents(SommetCouMin);
+			cout << "les sommets adjacents à " << SommetCouMin << " sont :" << endl;
+			for (size_t k = 0 ; k<adj.size(); k++)
+			{
+				cout<<adj[k]<<endl;
+				if(unGraphe.arcExiste(SommetCouMin, adj[k]))
+				if(tableauDesCouts[adj[k]]> tableauDesCouts[SommetCouMin]+unGraphe.getCoutArc(SommetCouMin, adj[k]))
+					{
+						tableauDesCouts[adj[k]]= tableauDesCouts[SommetCouMin]+unGraphe.getCoutArc(SommetCouMin, adj[k]);
+						predecesseurs[adj[k]] = SommetCouMin;
+
+					}
+
+
 			}
 
-			std::vector<int> adj = unGraphe.listerSommetsAdjacents(
-					Q[positionCoutMin]);
-			cout << "les sommets adjacents à " << Q[positionCoutMin] << " sont"
-					<< " " << endl;
-//			for (std::vector<int>::iterator it = Q.begin(); it != Q.end();
-//					it++) {
-//				if (unGraphe.arcExiste(positionCoutMin + 1, *it))
-//					D[*it - 1] = std::min(D[*it - 1],
-//							D[positionCoutMin]
-//									+ unGraphe.getCoutArc(positionCoutMin + 1,
-//											*it));
-//
-//				P.push_back(Q[positionCoutMin]);
-//			}
-			for(std::vector<int>::iterator k =adj.begin();k!= adj.end(); k++) {
-				std::vector<int>::iterator it = find(Q.begin(),Q.end(), *k);
-				if(it != unGraphe.listerSommetsAdjacents(coutMin).end()){
-
-					cout<< Q[*it]<<",";
-					int temp = D[positionCoutMin]+ unGraphe.getCoutArc(Q[positionCoutMin], *k);
-					if(temp < D[*k -1])
-					{
-						D[*k -1] = temp;
-						P.push_back(Q[positionCoutMin]);
-					}
-				}
-
-		}
 			cout << endl;
-			itdebut++;
-			Q.erase(Q.begin() + positionCoutMin);
 
 		}
+//	}catch(std::bad_alloc & e)
+//	{
+//		throw e;
+//	}
+		nbSec += tableauDesCouts[p_destination];
 
-	} catch (std::bad_alloc & erreur) {
+		cheminParNOM = this->cheminlePlusCourt(predecesseurs, p_origine, p_destination, nbSec);
+		cout << "le chemin le plus court est :" << endl;
 
-		throw erreur;
-	}
+		return cheminParNOM;
 
-	cout << "le chemin le plus court est :" << endl;
-	for (std::vector<int>::iterator it = P.begin(); it != P.end(); it++) {
-		cheminParNOM.push_back(unGraphe.getNomSommet(*it));
-		cout << *it << endl;
-	}
-	return cheminParNOM;
 }
 
 /**

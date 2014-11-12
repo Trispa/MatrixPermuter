@@ -82,11 +82,28 @@ class Metro
 		 */
 		void afficherStations();
 
-		std::vector<int> min(std::vector<int> &vecteur_cout);
-		void initGraphe(std::vector<int>& temp, std::vector<int>&sommetTraites,std::vector<int>&tableauCout, int & source);
-		void relacher(int, int, int, std::vector<int>&);
-		int getIndiceSommet(std::vector<int> vect, int val);
+		//!
+		//!\brief Initialiser les tableau utilisés pour la recherche du chemmin le plus court
+		//!\param[in]temp  copie de la liste des sommets  pour ne pas modifier le graphe
+		//!\param[in]predecesseurs le tableau des predecesseurs
+		//!\param[in]tableauCout le tableau des coûts
+		//!\param[in]etats tableau des etats
 
+		void initForPathSearched(std::vector<int>& temp, std::vector<int>&predecesseurs,std::vector<int>&tableauCout, std::vector<bool>& etats);
+
+		//!
+		//!\brief retourner l'indice du sommet de coup minimal si le sommet n'a pas eté deja traité
+		//!\param[in]vect le tableu des couts
+		//!\param[in] etats tableau des etats
+
+		int getIndiceSommetDeCoutMin(std::vector<int> &vect, std::vector<bool>&);
+
+		//!\param[in]predecesseurs le tableau des predecesseurs
+		//!\param[in]source le numero de la station source
+		//!\param[in]destination le numero de la station de  destination
+		//!\param[in]nbSec le temps de parcour du chemin en second
+		//!\exception std::logic_error les sommets sources et destination doivent exister
+		std::vector<std::string> cheminlePlusCourt(const std::vector<int>& predecesseurs,const int &source, const int &destunation, int& nbSec);
 	// ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé
 	//	Chemin le plus court, chemin le plus long...
 	// _____________________________________________________________________________________________

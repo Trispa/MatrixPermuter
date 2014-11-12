@@ -17,8 +17,8 @@ int main(void) {
 	std::ifstream myfile("Metro.txt");
 	Metro * metroParis;
 	metroParis = new Metro(myfile);
-	int source = 5;
-	int destination= 55;
+	int source ;
+	int destination;
 	int duree;
 	cout<<"-----------------------------------------------------------------------------------"<<endl;
 	cout << "Entrez le numéro de la station de départ" << endl;
@@ -32,7 +32,7 @@ int main(void) {
 	for (size_t i = 0; i < cheminDjkstra.size(); i++) {
 		cout << cheminDjkstra[i] << endl;
 	}
-	cout << "avec un temps estimé de" << duree << " secondes" << endl;
+	cout << "avec un temps estimé de " << duree << " secondes" << endl;
 	vector<string> cheminBellman_ford = metroParis->bellManFord(source,
 			destination, duree);
 	cout<<"-----------------------------------------------------------------------------------"<<endl;
@@ -40,7 +40,7 @@ int main(void) {
 	for (size_t i = 0; i < cheminBellman_ford.size(); i++) {
 		cout << cheminBellman_ford[i] << endl;
 	}
-	cout << "avec un temps estimé de" << duree << " secondes" << endl;
+	cout << "avec un temps estimé de " << duree << " secondes" << endl;
 
 	cout<<"-----------------------------------------------------------------------------------"<<endl;
 	cout
